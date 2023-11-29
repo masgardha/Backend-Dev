@@ -32,6 +32,13 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        if (empty($user)) {
+            return response()->json([
+                'status' => true,
+                'message' => 'registration is failed'
+            ]);
+        }
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -54,7 +61,6 @@ class UserController extends Controller
         }
 
         $user = User::where('email', $request['email'])->firstOrFail();
-
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([

@@ -16,7 +16,16 @@ class BlogController extends Controller
      */
     public function deleteBlog(string $id)
     {
-        Blog::findOrFail($id)->delete();
+        $blog = Blog::find($id);
+        if (empty($blog)) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Data not found'
+            ]);
+        }
+
+        $blog->delete();
+
         return response()->json([
             'status' => true,
             'data' => 'remove blog success'
@@ -63,6 +72,14 @@ class BlogController extends Controller
     public function viewsBlog()
     {
         $blog = Blog::all();
+
+        if (empty($blog)) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Data is empty'
+            ]);
+        }
+
         return response()->json([
             'status' => true,
             'data' => $blog
@@ -73,7 +90,14 @@ class BlogController extends Controller
      * View blog by id
      */
     public function viewBlog($id): JsonResponse {
-        $blog = Blog::findOrFail($id);
+        $blog = Blog::find($id);
+
+        if (empty($blog)) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Data not found'
+            ]);
+        }
         return response()->json([
             'status' => true,
             'data' => $blog
@@ -95,6 +119,12 @@ class BlogController extends Controller
         }
 
         $blog = Blog::find($id);
+        if (empty($blog)) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Data not found'
+            ]);
+        }
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
